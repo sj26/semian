@@ -15,6 +15,16 @@ class TestSysVState < MiniTest::Unit::TestCase
 
   include TestSimpleState::StateTestCases
 
+  def test_memory_is_shared
+    assert_equal :closed, @state.value
+    @state.open
+
+    state_2 = CLASS.new(name: 'TestSysVState',
+                        permissions: 0660)
+    assert_equal :open, state_2.value
+    assert state_2.open?
+  end
+
   def test_will_throw_error_when_invalid_symbol_given
     # May occur if underlying integer gets into bad state
     integer = @state.instance_eval "@integer"
